@@ -1,0 +1,17 @@
+{
+  "name": "lisp-interpretor",
+  "version": "1.0.0",
+  "main": "src/index.js",
+  "author": "Thomas Arbona",
+  "license": "MIT",
+  "scripts": {
+    "start": "node ./src",
+    "test": "mocha $(find tests -name '*.js')"
+  },
+  "devDependencies": {
+    "mocha": "^5.2.0"
+  },
+  "dependencies": {
+    "chalk": "^2.4.1"
+  }
+}
