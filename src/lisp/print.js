@@ -18,7 +18,7 @@ const printLisp = (ast) => {
   if (!Array.isArray(ast)) {
     out += printAtom(ast);
   } else {
-    out += '(';
+    out += '\'(';
     out += ast.map((atom, it) => {
       return (it !== 0 ? ' ' : '') + (
         Array.isArray(atom)

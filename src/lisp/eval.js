@@ -10,6 +10,18 @@ const evalAST = (ast, env) => {
   return ast;
 };
 
+const evalUnquote = (ast, env) => {
+  if (Array.isArray(ast)) {
+    return ast.map(atom => {
+      if (!Array.isArray(atom) || atom[0].toString() !== 'Symbol(unquote)') {
+        return atom;
+      }
+      return evalLisp(atom[1], env);
+    });
+  }
+  return ast;
+};
+
 const evalLisp = (ast, env) => {
   if (!Array.isArray(ast)) {
     return evalAST(ast, env);
@@ -19,6 +31,14 @@ const evalLisp = (ast, env) => {
   }
 
   if (typeof ast[0] === 'symbol') {
+
+    if (ast[0].toString() === 'Symbol(quote)') {
+      return ast[1];
+    }
+
+    if (ast[0].toString() === 'Symbol(quasiquote)') {
+      return evalUnquote(ast[1], env);
+    }
 
     if (ast[0].toString() === 'Symbol(fn*)') {
       const func = function() {
