@@ -12,12 +12,22 @@ const evalAST = (ast, env) => {
 
 const evalUnquote = (ast, env) => {
   if (Array.isArray(ast)) {
-    return ast.map(atom => {
-      if (!Array.isArray(atom) || atom[0].toString() !== 'Symbol(unquote)') {
-        return atom;
+    return ast.reduce((acc, atom) => {
+      if (Array.isArray(atom)) {
+        if (atom[0].toString() === 'Symbol(unquote)') {
+          acc.push(evalLisp(atom[1], env));
+          return acc;
+        } else if (atom[0].toString() === 'Symbol(unquote-splicing)') {
+          const list = evalLisp(atom[1], env);
+          if (!Array.isArray(list)) {
+            throw Error(`unquote-splicing: contract violation\nexpected: list?\ngiven: ${list}`);
+          }
+          return acc.concat(list);
+        }
       }
-      return evalLisp(atom[1], env);
-    });
+      acc.push(atom);
+      return acc;
+    }, []);
   }
   return ast;
 };
