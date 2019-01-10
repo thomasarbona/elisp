@@ -120,6 +120,47 @@ describe('lisp/', () => {
       });
     });
 
+    describe('quote', () => {
+      it('should not eval quote', () => {
+        const ast = evalLisp(readLisp('(quote (1 2 3))'), createEnv());
+        assert.deepEqual(ast, [1, 2, 3]);
+      });
+
+      it('should not eval quote with function', () => {
+        const ast = evalLisp(readLisp('(quote (+ 1 2 3))'), createEnv());
+        ast[0] = ast[0].toString();
+        assert.deepEqual(ast, ['Symbol(+)', 1, 2, 3]);
+      });
+    });
+
+    describe('quasiquote', () => {
+      it('should not eval quasiquote', () => {
+        const ast = evalLisp(readLisp('(quasiquote (1 2 3))'), createEnv());
+        assert.deepEqual(ast, [1, 2, 3]);
+      });
+
+      it('should not eval quasiquote with function', () => {
+        const ast = evalLisp(readLisp('(quasiquote (+ 1 2 3))'), createEnv());
+        ast[0] = ast[0].toString();
+        assert.deepEqual(ast, ['Symbol(+)', 1, 2, 3]);
+      });
+
+      describe('unquote', () => {
+        it('should eval unquote in quasiquote', () => {
+          const ast = evalLisp(readLisp('(quasiquote (1 (unquote (+ 1 1)) 3))'), createEnv());
+          assert.deepEqual(ast, [1, 2, 3]);
+        });
+      });
+
+      describe('unquote-splicing', () => {
+        it('should eval unquote-splicing in quasiquote and merge list', () => {
+          const ast = evalLisp(readLisp('(quasiquote (1 (unquote-splicing (list 2 3)) 4))'), createEnv());
+          assert.deepEqual(ast, [1, 2, 3, 4]);
+        });
+      });
+
+    });
+
   });
 
 });

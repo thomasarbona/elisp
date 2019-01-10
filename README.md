@@ -16,4 +16,5 @@ yarn test
 # Features
 - read–eval–print loop (REPL)
 - Mathematical Operators (+, -, *, /)
-- `do`, `if`, `def!`, `let*`, `fn*`
+- Basic keywords: `do`, `if`, `def!`, `let*`, `fn*`
+- Quote keywords: `quote`, `quasiquote`, `unquote`, `unquote-splicing`
